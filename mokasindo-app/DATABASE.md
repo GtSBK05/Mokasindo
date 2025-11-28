@@ -21,6 +21,16 @@
 15. ✅ **cache** - Laravel cache
 16. ✅ **jobs** - Laravel queue jobs
 17. ✅ **migrations** - Laravel migrations tracking
+18. ✅ **teams** - Data anggota tim dan struktur organisasi
+19. ✅ **vacancies** - Data lowongan pekerjaan (karena sudah ada nama tabel jobs)
+20. ✅ **job_applications** - Data pelamar kerja dan file CV
+21. ✅ **inquiries** - Data pesan masuk dari form Contact Us
+22. ✅ **faqs** - Data pertanyaan umum (FAQ)
+23. ✅ **pages** - Konten halaman dinamis (About, Terms, Privacy)
+24. ✅ **auction_schedules** - Data jadwal/batch lelang induk
+25. ✅ **deliveries** - Data pengiriman unit, tracking, dan bukti serah terima (BAST)
+26. ✅ **subscription_plans** - Master data paket langganan (Silver, Gold, Platinum)
+27. ✅ **user_subscriptions** - Data riwayat langganan user dan masa aktifnya
 
 ---
 
@@ -40,6 +50,14 @@
 ✅ Transaction.php
 ✅ Notification.php
 ✅ Setting.php
+✅ Team.php
+✅ Vacancy.php  (PENGGANTI Job.php)
+✅ JobApplication.php
+✅ Inquiry.php
+✅ Faq.php
+✅ Page.php
+✅ AuctionSchedule.php
+✅ Delivery.php
 
 ---
 
@@ -313,6 +331,123 @@ Role: admin
 - is_public (apakah bisa diakses tanpa login)
 - timestamps
 ```
+
+### teams
+- id
+- name
+- position
+- photo_url
+- linkedin_url
+- instagram_url
+- bio
+- order_number
+- timestamps
+
+### vacancies
+- id
+- title
+- description (text)
+- requirements (text)
+- type (enum: fulltime, contract, internship)
+- location
+- salary_range
+- is_active (boolean)
+- closed_at
+- timestamps
+- soft deletes
+
+### job_applications
+- id
+- job_id
+- name
+- email
+- phone
+- cover_letter
+- cv_path (file PDF)
+- status (enum: pending, reviewed, rejected, accepted)
+- applied_at
+- timestamps
+
+### inquiries
+- id
+- name
+- email
+- phone
+- subject
+- message
+- status (enum: new, read, replied, spam)
+- ip_address
+- timestamps
+
+### faqs
+- id
+- category (enum: general, account, auction, payment)
+- question
+- answer
+- order_number
+- is_active
+- timestamps
+
+### pages
+- id
+- title
+- slug (unique: about-us, terms, privacy-policy)
+- content (longText)
+- meta_title
+- meta_description
+- last_updated_by (user_id)
+- timestamps
+
+### auction_schedules
+- id
+- title (misal: "Lelang Mobil SUV Jakarta Batch 102")
+- description (text)
+- location_id (relasi ke kota/cabang)
+- start_date (datetime)
+- end_date (datetime)
+- is_active (boolean)
+- created_by (user_id admin)
+- timestamps
+- soft deletes
+
+### deliveries
+- id
+- transaction_id (Foreign Key ke transactions)
+- pickup_address (Alamat pengambilan/pool seller)
+- destination_address (Alamat tujuan pemenang)
+- distance_km (Jarak tempuh dalam KM)
+- shipping_cost (Biaya ongkir/towing)
+- courier_name (Nama Ekspedisi/Driver Towing)
+- courier_phone
+- vehicle_plate_number (Plat nomor truk towing)
+- tracking_code (Nomor Resi/Kode Unik)
+- status (enum: pending, processing, on_delivery, delivered, confirmed)
+- proof_of_delivery (Foto bukti serah terima/BAST - File Image)
+- received_by (Nama penerima di lokasi)
+- received_at (Waktu diterima)
+- notes
+- timestamps
+
+### subscription_plans
+- id
+- name (string: "Gold Member", "Dealer Pro")
+- price (decimal)
+- duration_days (int: 30, 365)
+- description (text)
+- features (json: list keunggulan untuk ditampilkan di pricing page)
+- is_active (boolean)
+- timestamps
+
+### user_subscriptions
+- id
+- user_id (foreign key ke users)
+- subscription_plan_id (foreign key ke subscription_plans)
+- transaction_id (foreign key ke transactions/payments jika ada)
+- start_date (datetime)
+- end_date (datetime) -- Kunci utama untuk pengecekan expired
+- status (enum: active, expired, cancelled)
+- price_paid (decimal) -- Harga saat beli (takutnya harga paket naik di masa depan)
+- timestamps
 
 ---
 

@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('districts', function (Blueprint $table) {
+        Schema::create('inquiries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('city_id')->constrained()->onDelete('cascade');
-            $table->string('code', 10)->unique();
             $table->string('name');
+            $table->string('email');
+            $table->string('phone')->nullable();
+            $table->string('subject');
+            $table->text('message');
+            $table->enum('status', ['new', 'read', 'replied', 'spam'])->default('new');
+            $table->text('admin_reply')->nullable();
             $table->timestamps();
-            
-            $table->index(['city_id', 'code']);
         });
     }
 
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('districts');
+        Schema::dropIfExists('inquiries');
     }
 };

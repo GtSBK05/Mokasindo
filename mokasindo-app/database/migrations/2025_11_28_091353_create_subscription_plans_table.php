@@ -11,23 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cities', function (Blueprint $table) {
+        Schema::create('subscription_plans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('province_id')->constrained()->onDelete('cascade');
-            $table->string('code', 10)->unique();
             $table->string('name');
-            $table->enum('type', ['kabupaten', 'kota'])->default('kabupaten');
+            $table->decimal('price', 10, 2);
+            $table->integer('duration_days');
+            $table->json('features')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
-            
-            $table->index(['province_id', 'code']);
         });
     }
-
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('cities');
+        Schema::dropIfExists('subscription_plans');
     }
 };

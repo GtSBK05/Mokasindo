@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sub_districts', function (Blueprint $table) {
+        Schema::create('teams', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('district_id')->constrained()->onDelete('cascade');
-            $table->string('code', 10)->unique();
             $table->string('name');
-            $table->string('postal_code', 10)->nullable();
+            $table->string('position');
+            $table->string('photo_url')->nullable();
+            $table->string('linkedin_url')->nullable();
+            $table->string('instagram_url')->nullable();
+            $table->text('bio')->nullable();
+            $table->integer('order_number')->default(0);
             $table->timestamps();
-            
-            $table->index(['district_id', 'code']);
-            $table->index('postal_code');
         });
     }
 
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sub_districts');
+        Schema::dropIfExists('teams');
     }
 };
