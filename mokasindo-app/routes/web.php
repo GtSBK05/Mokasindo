@@ -40,3 +40,35 @@ Route::controller(CompanyController::class)->group(function () {
     })->name('company.cookie_policy');
 
 });
+
+use App\Services\TelegramService;
+
+// --- AREA TESTING (BOT) ---
+Route::get('/tes-bot', function () {
+    $telegram = new TelegramService();
+    
+    // Chat ID dari @userinfobot
+    $chatIdSaya = '6179231520'; 
+
+    // --- DESAIN PESAN ---
+    
+    $pesan = "<b>🔔 MOKASINDO NOTIFICATION</b>\n\n" .
+             "Halo, <b>Surya Afriza</b>! 👋\n" .
+             "Akun Telegram Anda berhasil terhubung dengan sistem lelang kami.\n\n" .
+             "📅 <b>Waktu Akses:</b> " . date('d F Y, H:i') . " WIB\n" .
+             "✅ <b>Status:</b> TERVERIFIKASI\n\n" .
+             "<i>Sekarang Anda akan menerima update lelang secara realtime.</i>\n" .
+             "--------------------------------\n" .
+             "🔗 <a href='http://127.0.0.1:8000'>Buka Website Mokasindo</a>";
+    
+    // Kirim pesan
+    $hasil = $telegram->sendMessage($chatIdSaya, $pesan);
+    
+    // Cek hasil
+    if ($hasil['success']) {
+        return "✅ Sukses! Notifikasi keren sudah dikirim ke HP kamu.";
+    } else {
+        return "❌ Gagal Kirim! <br>Penyebab: " . $hasil['error'];
+    }
+});
+
