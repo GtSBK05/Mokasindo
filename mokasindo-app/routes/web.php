@@ -23,61 +23,37 @@ Route::middleware('auth')->group(function () {
     Route::delete('/wishlists/{id}', [WishlistController::class, 'destroy']);
 });
 
-// ====================================================
-// Company Routes (Temporary Empty Routes)
-// ====================================================
-Route::prefix('company')->name('company.')->group(function () {
-    Route::get('/about', function () {
-        return '<h1>About Us - Coming Soon</h1>';
-    })->name('about');
-    
-    Route::get('/faq', function () {
-        return '<h1>FAQ - Coming Soon</h1>';
-    })->name('faq');
-    
-    Route::get('/career', function () {
-        return '<h1>Career - Coming Soon</h1>';
-    })->name('career');
-    
-    Route::get('/career/{id}', function ($id) {
-        return '<h1>Career Detail - Coming Soon</h1>';
-    })->name('career.detail');
-    
-    Route::post('/career/{id}/apply', function ($id) {
-        return redirect()->back()->with('success', 'Application submitted - Coming Soon');
-    })->name('career.apply');
-    
-    Route::get('/contact', function () {
-        return '<h1>Contact Us - Coming Soon</h1>';
-    })->name('contact');
-    
-    Route::post('/contact', function () {
-        return redirect()->back()->with('success', 'Message sent - Coming Soon');
-    })->name('contact.store');
-    
-    Route::get('/how-it-works', function () {
-        return '<h1>How It Works - Coming Soon</h1>';
-    })->name('how_it_works');
-    
+// Group Route Company
+Route::controller(CompanyController::class)->group(function () {
+    Route::get('/about', 'about')->name('company.about');
+    Route::get('/faq', 'faq')->name('company.faq');
+    Route::get('/contact', 'contact')->name('company.contact');
+    Route::post('/contact', 'storeContact')->name('company.contact.store');
+
+    Route::get('/careers', 'career')->name('company.career');
+    Route::get('/careers/{id}', 'careerDetail')->name('company.career.show');
+    Route::post('/careers/{id}/apply', 'storeCareerApplication')->name('company.career.store');
+
     Route::get('/terms', function () {
-        return '<h1>Terms & Conditions - Coming Soon</h1>';
-    })->name('terms');
-    
+        $page = Page::findBySlug('terms');
+        return view('pages.company.generic', compact('page'));
+    })->name('company.terms');
+
     Route::get('/privacy', function () {
-        return '<h1>Privacy Policy - Coming Soon</h1>';
-    })->name('privacy');
-    
+        $page = Page::findBySlug('privacy-policy');
+        return view('pages.company.generic', compact('page'));
+    })->name('company.privacy');
+
+    Route::get('/how-it-works', function () {
+        $page = Page::findBySlug('how-it-works');
+        return view('pages.company.generic', compact('page'));
+    })->name('company.how_it_works');
+
     Route::get('/cookie-policy', function () {
-        return '<h1>Cookie Policy - Coming Soon</h1>';
-    })->name('cookie_policy');
-    
-    Route::get('/career/{id}/detail', function ($id) {
-        return '<h1>Career Detail - Coming Soon</h1>';
-    })->name('career.show');
-    
-    Route::post('/career/{id}/submit', function ($id) {
-        return redirect()->back()->with('success', 'Application submitted - Coming Soon');
-    })->name('career.store');
+        $page = Page::findBySlug('cookie-policy');
+        return view('pages.company.generic', compact('page'));
+    })->name('company.cookie_policy');
+
 });
 
 // ====================================================
