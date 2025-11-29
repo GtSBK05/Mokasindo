@@ -47,7 +47,7 @@ class SendNewUserTelegramNotification
 
         // --- BAGIAN 2: KIRIM LAPORAN KE ADMIN ---
         
-        // Masukkan ID Telegram KAMU di sini 
+        // // GANTI ID INI DENGAN ID TELEGRAM SIAPAPUN YANG MAU TES ambil di @userinfobot
         $adminChatId = '6179231520';
         
         $pesanAdmin = "<b>👮 LAPORAN ADMIN</b>\n\n" .

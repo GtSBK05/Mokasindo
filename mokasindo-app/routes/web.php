@@ -98,19 +98,24 @@ Route::controller(CompanyController::class)->group(function () {
 // });
 
 // --- TES EVENT LISTENER REGISTERED ---
-// Route::get('/tes-register', function () {
-    // $unik = time();
+Route::get('/tes-register', function () {
+    // Kita pakai WAKTU (time) biar emailnya unik terus setiap detik
+    $unik = time();
     
-    // $userBaru = User::create([
-        // 'name' => "Member $unik",
-        // 'email' => "member$unik@test.com",
-    //  'password' => Hash::make('password123'),
-        // 'telegram_chat_id' => '6179231520', // GANTI DENGAN ID TELEGRAM ASLI KAMU
-        // 'role' => 'member'
-    // ]);
+    // Membuat User Baru Pura-pura
+    $userBaru = User::create([
+        'name' => "Member $unik",
+        'email' => "member$unik@test.com",
+        'password' => Hash::make('password123'),
+        'telegram_chat_id' => '6179231520', // GANTI ID INI DENGAN ID TELEGRAM SIAPAPUN YANG MAU TES ambil di @userinfobot
+        'role' => 'member'
+    ]);
 
-    //Trigger Event ada user baru
-    // event(new Registered($userBaru));
+    // Memicu Event (Seolah-olah user baru saja daftar)
+    // Ini akan memicu Listener untuk kirim Laporan ke Admin
+    event(new Registered($userBaru));
 
-    // return "User {$userBaru->name} berhasil didaftarkan! Cek Telegram kamu.";
-// });
+    return "✅ User <b>{$userBaru->name}</b> berhasil didaftarkan! <br><br>" .
+           "1. Cek HP Admin (Laporan Pendaftaran Masuk).<br>" .
+           "2. Cek HP User (Ucapan Selamat Datang Masuk).";
+});
