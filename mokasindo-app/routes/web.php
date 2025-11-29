@@ -3,8 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\CompanyController;
+<<<<<<< HEAD
+use App\Http\Controllers\InstagramController;
+=======
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\WishlistController;
+>>>>>>> 566bf0651e64fca396a13e6e51f6e9d4cb5f71e5
 use App\Models\Page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -58,6 +62,9 @@ Route::controller(CompanyController::class)->group(function () {
 
 });
 
+<<<<<<< HEAD
+Route::get('/instagram-feed', [InstagramController::class, 'getMedia']);
+=======
 // ====================================================
 // 4. HELPER TESTING (Force Login)
 // ====================================================
@@ -80,6 +87,7 @@ Route::get('/force-login', function () {
     
     return "<h1>Berhasil Login!</h1> <p>Login sebagai: <b>" . $user->name . "</b></p><p>Silakan akses <a href='/wishlists'>/wishlists</a> atau <a href='/etalase/vehicles'>/etalase/vehicles</a></p>";
 });
+<<<<<<< HEAD
 
 // Tampilkan form register perusahaan
 Route::get('/register', function () {
@@ -111,3 +119,6 @@ Route::post('/register', function (Request $request) {
 	// Untuk sementara redirect kembali dengan pesan sukses
 	return redirect('/register')->with('status', 'Registrasi berhasil (demo).');
 })->name('company.register');
+=======
+>>>>>>> 566bf0651e64fca396a13e6e51f6e9d4cb5f71e5
+>>>>>>> f31128ff21feb98c473ead67e73a0f75923fc650
