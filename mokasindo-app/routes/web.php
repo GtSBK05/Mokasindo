@@ -5,11 +5,26 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Controllers\CompanyController;
 use App\Services\TelegramService;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\WishlistController;
 use App\Models\Page;
 use App\Models\User;
 
 Route::get('/', function () {
     return view('landing');
+});
+
+Route::prefix('etalase')->group(function () {
+    Route::get('/filters', [VehicleController::class, 'filters']);
+    Route::get('/vehicles', [VehicleController::class, 'index']);
+    Route::get('/vehicles/{id}', [VehicleController::class, 'show']);
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/wishlists', [WishlistController::class, 'index']);
+    Route::post('/wishlists', [WishlistController::class, 'store']);
+    Route::delete('/wishlists/{id}', [WishlistController::class, 'destroy']);
 });
 
 // Group Route Company
@@ -44,59 +59,6 @@ Route::controller(CompanyController::class)->group(function () {
     })->name('company.cookie_policy');
 
 });
-// --- AREA TESTING (BOT) ---
-// Route::get('/tes-bot', function () {
-    // $telegram = new TelegramService();
-    
-    // Chat ID dari @userinfobot
-    // $chatIdSaya = '6179231520'; 
-
-    // --- DESAIN PESAN ---
-    
-    // $pesan = "<b>🔔 MOKASINDO NOTIFICATION</b>\n\n" .
-            //  "Halo, <b>Surya Afriza</b>! 👋\n" .
-            //  "Akun Telegram Anda berhasil terhubung dengan sistem lelang kami.\n\n" .
-            //  "📅 <b>Waktu Akses:</b> " . date('d F Y, H:i') . " WIB\n" .
-            //  "✅ <b>Status:</b> TERVERIFIKASI\n\n" .
-            //  "<i>Sekarang Anda akan menerima update lelang secara realtime.</i>\n" .
-            //  "--------------------------------\n" .
-            //  "🔗 <a href='http://127.0.0.1:8000'>Buka Website Mokasindo</a>";
-    
-    // Kirim pesan
-    // $hasil = $telegram->sendMessage($chatIdSaya, $pesan);
-    
-    // Cek hasil
-    // if ($hasil['success']) {
-        // return "✅ Sukses! Notifikasi keren sudah dikirim ke HP kamu.";
-    // } else {
-        // return "❌ Gagal Kirim! <br>Penyebab: " . $hasil['error'];
-    // }
-// });
-
-// --- TES DATABASE ---
-// Route::get('/tes-db-notif', function () {
-    // $telegram = new TelegramService();
-    
-    // 1. Ambil User pertama dari database (yang tadi kamu edit di phpMyAdmin)
-    // $user = User::first(); 
-    
-    // Cek apakah usernya ketemu
-    // if (!$user) {
-        // return "Database kosong! Jalankan 'php artisan migrate:fresh --seed' dulu.";
-    // }
-
-    // $pesan = "Halo <b>{$user->name}</b>! \nSistem berhasil menemukan ID Telegram kamu dari Database Mokasindo. Keren kan? 😎";
-
-    // 2. Kirim notifikasi ke user tersebut
-    // $hasil = $telegram->sendToUser($user, $pesan);
-
-    // if ($hasil['success']) {
-        // return "✅ Sukses kirim ke user: " . $user->name;
-    // } else {
-        // return "❌ Gagal: " . $hasil['error'];
-    // }
-// });
-
 // --- TES EVENT LISTENER REGISTERED ---
 Route::get('/tes-register', function () {
     // Kita pakai WAKTU (time) biar emailnya unik terus setiap detik
@@ -118,4 +80,27 @@ Route::get('/tes-register', function () {
     return "✅ User <b>{$userBaru->name}</b> berhasil didaftarkan! <br><br>" .
            "1. Cek HP Admin (Laporan Pendaftaran Masuk).<br>" .
            "2. Cek HP User (Ucapan Selamat Datang Masuk).";
+});
+
+// ====================================================
+// 4. HELPER TESTING (Force Login)
+// ====================================================
+// Jalankan URL ini sekali di browser agar kamu login otomatis sebagai ID 1 (http://mokasindo.test/force-login)
+
+Route::get('/force-login', function () {
+    $user = \App\Models\User::find(1);
+    
+    if (!$user) {
+        // Buat user dummy jika belum ada
+        $user = \App\Models\User::create([
+            'id' => 1,
+            'name' => 'Tester User',
+            'email' => 'tester@example.com',
+            'password' => bcrypt('password'),
+        ]);
+    }
+
+    Auth::login($user);
+    
+    return "<h1>Berhasil Login!</h1> <p>Login sebagai: <b>" . $user->name . "</b></p><p>Silakan akses <a href='/wishlists'>/wishlists</a> atau <a href='/etalase/vehicles'>/etalase/vehicles</a></p>";
 });
