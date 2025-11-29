@@ -53,5 +53,28 @@ class TelegramService
         // Kalau ada, kirim pakai fungsi sendMessage yang lama
         return $this->sendMessage($user->telegram_chat_id, $message);
     }
+    
+    /**
+     * Fungsi Khusus untuk Dipanggil Tim Lelang (Jobdesk 4)
+     * Panggil ini saat waktu lelang habis & pemenang ditentukan.
+     */
+    public function sendAuctionWinnerNotif($user, $namaBarang, $hargaAkhir)
+    {
+        if (empty($user->telegram_chat_id)) return false;
+
+        // Format Rupiah
+        $hargaRupiah = "Rp " . number_format($hargaAkhir, 0, ',', '.');
+
+        $pesan = "<b>🏆 SELAMAT! ANDA MEMENANGKAN LELANG</b>\n\n" .
+                 "Halo <b>{$user->name}</b>,\n" .
+                 "Anda adalah penawar tertinggi untuk unit:\n" .
+                 "🏍️ <b>{$namaBarang}</b>\n" .
+                 "💰 Harga Final: <b>{$hargaRupiah}</b>\n\n" .
+                 "⚠️ <b>PENTING:</b>\n" .
+                 "Segera lakukan pembayaran dalam 1x24 jam agar unit tidak hangus.\n\n" .
+                 "<i>Tim Mokasindo</i>";
+
+        return $this->sendMessage($user->telegram_chat_id, $pesan);
+    }
 
 }
